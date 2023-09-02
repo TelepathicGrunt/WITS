@@ -1,0 +1,66 @@
+dependencies {
+    // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
+    // Do NOT use other classes from fabric loader
+    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+}
+
+architectury {
+    common("fabric", "forge")
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/wits.accesswidener")
+}
+
+def ENV = System.getenv()
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact remapJar
+            artifact(sourcesJar) {
+                builtBy remapSourcesJar
+            }
+
+            artifactId = "$rootProject.name"
+
+            pom {
+                name = 'WITS'
+                description = 'Makes watchdog print the entire stacktrace of every thread because truncating stacktraces is stupid'
+                url = 'https://github.com/TelepathicGrunt/WITS'
+
+                scm {
+                    connection = 'git:https://github.com/TelepathicGrunt/WITS.git'
+                    developerConnection = 'git:https://github.com/TelepathicGrunt/WITS.git'
+                    url = 'https://github.com/TelepathicGrunt/WITS'
+                }
+
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'https://github.com/TelepathicGrunt/WITS/blob/master/LICENSE'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'telepathic_grunt'
+                        name = 'TelepathicGrunt'
+                        email = 'asarnesespam@gmail.com'
+                    }
+                }
+            }
+
+        }
+    }
+
+    repositories {
+        maven {
+            url = uri("https://nexus.resourcefulbees.com/repository/telepathicgrunt/")
+            credentials {
+                username ENV.MAVEN_USER
+                password ENV.MAVEN_PASS
+            }
+        }
+    }
+}

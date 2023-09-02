@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "package": "com.telepathicgrunt.wits.mixins",
+  "compatibilityLevel": "JAVA_16",
+  "mixins": [],
+  "client": [],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "minVersion": "0.8"
+}

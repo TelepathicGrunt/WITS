@@ -1,0 +1,26 @@
+modLoader="javafml" #mandatory
+loaderVersion="[37,)" #mandatory
+issueTrackerURL="https://github.com/TelepathicGrunt/WITS/issues" #optional
+license="https://github.com/TelepathicGrunt/WITS/blob/latest-released/LICENSE"
+
+[[mods]] #mandatory
+modId="wits" #mandatory
+logoFile= "wits_logo_wide.png"
+logoBlur=false
+version="${version}" #mandatory
+displayName="WITS" #mandatory
+displayURL="https://www.curseforge.com/minecraft/mc-mods/wits"
+authors="TelepathicGrunt"
+description='''
+Use `\wits @s` command to get registry name of all structures where you are standing.
+'''
+
+[[dependencies.wits]]
+    modId="minecraft"
+    mandatory=true
+    versionRange="[1.17,)"
+
+[[dependencies.wits]]
+    modId="forge"
+    mandatory=true
+    versionRange="(37.0.0,)"

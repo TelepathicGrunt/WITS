@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "id": "wits",
+  "version": "${version}",
+
+  "name": "WITS",
+  "description": "Use `\\wits @s` command to get registry name of all structures where you are standing. ",
+  "authors": [
+    "TelepathicGrunt"
+  ],
+  "contact": {
+    "homepage": "https://www.curseforge.com/minecraft/mc-mods/wits",
+    "issues": "https://github.com/TelepathicGrunt/WITS/issues"
+  },
+
+  "license": "MIT License",
+  "icon": "assets/wits/wits_logo.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.telepathicgrunt.wits.fabric.WITSFabric"
+    ]
+  },
+  "mixins": [
+    "wits-common.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": ">=1.17",
+    "fabric": "*"
+  }
+}
