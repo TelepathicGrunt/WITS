@@ -17,10 +17,12 @@ import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
+import net.minecraft.world.level.levelgen.feature.StructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class WITSCommand {
     public static void createCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -57,9 +59,20 @@ public class WITSCommand {
 
     private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
         BlockPos centerPos = coordinates.getBlockPos(cs.getSource());
+        Registry<StructureFeature<?>> structureFeatureRegistry = level.registryAccess().registryOrThrow(Registry.STRUCTURE_FEATURE_REGISTRY);
 
-        List<StructureStart> structureStarts = level.structureFeatureManager().startsForFeature(SectionPos.of(centerPos), s -> true);
-        List<? extends ConfiguredStructureFeature<?, ?>> structures = structureStarts.stream()
+        List<StructureStart<?>> structureStarts = new ArrayList<>();
+
+        for (StructureFeature<?> structureFeature : structureFeatureRegistry) {
+            Stream<? extends StructureStart<?>> startsForFeature = level.structureFeatureManager().startsForFeature(SectionPos.of(centerPos), structureFeature);
+            startsForFeature.forEach(ss -> {
+                if (ss.isValid()) {
+                    structureStarts.add(ss);
+                }
+            });
+        }
+
+        List<? extends StructureFeature<?>> structures = structureStarts.stream()
                 .filter(ss -> ss.getBoundingBox().isInside(centerPos))
                 .map(StructureStart::getFeature).toList();
 
@@ -79,8 +92,8 @@ public class WITSCommand {
             stringBuilder.append("Structure(s) at ").append(centerPos).append(":");
         }
 
-        for (ConfiguredStructureFeature<?, ?> structure : structures) {
-            ResourceLocation key = level.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).getKey(structure);
+        for (StructureFeature<?> structure : structures) {
+            ResourceLocation key = structureFeatureRegistry.getKey(structure);
             stringBuilder.append("§r\n - §6").append(key);
         }
 
