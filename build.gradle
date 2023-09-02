@@ -27,12 +27,12 @@ subprojects {
 
     Map<String, Map<String, String>> platformSettings = [
             "fabric": [
-                    "curse-id": "849817",
-                    "modrinth-id": "oZiSDGCi"
+                    "curse-id": "909375",
+                    "modrinth-id": "AVo2esap"
             ],
             "forge": [
-                    "curse-id": "849817",
-                    "modrinth-id": "oZiSDGCi"
+                    "curse-id": "909375",
+                    "modrinth-id": "AVo2esap"
             ]
     ]
 
