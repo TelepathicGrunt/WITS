@@ -11,12 +11,13 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.SectionPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.feature.ConfiguredStructureFeature;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 import java.util.List;
@@ -31,8 +32,8 @@ public class WITSCommand {
             .requires((permission) -> permission.hasPermission(0))
             .executes(cs -> {
                 WorldCoordinates coordinates;
-                if (cs.getSource().isPlayer()) {
-                    BlockPos currentPosition = cs.getSource().getPlayer().blockPosition();
+                if (cs.getSource().getEntity() instanceof Player) {
+                    BlockPos currentPosition = cs.getSource().getEntity().blockPosition();
                     coordinates = WorldCoordinates.absolute(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
                 }
                 else {
@@ -57,16 +58,16 @@ public class WITSCommand {
     private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
         BlockPos centerPos = coordinates.getBlockPos(cs.getSource());
 
-        List<StructureStart> structureStarts = level.structureManager().startsForStructure(new ChunkPos(centerPos), s -> true);
-        List<Structure> structures = structureStarts.stream()
+        List<StructureStart> structureStarts = level.structureFeatureManager().startsForFeature(SectionPos.of(centerPos), s -> true);
+        List<? extends ConfiguredStructureFeature<?, ?>> structures = structureStarts.stream()
                 .filter(ss -> ss.getBoundingBox().isInside(centerPos))
-                .map(StructureStart::getStructure).toList();
+                .map(StructureStart::getFeature).toList();
 
         if (structures.isEmpty()) {
-            Component component = Component.literal(callerPosition ?
+            Component component = new TextComponent(callerPosition ?
                     "There's no structures at your location." :
                     "There's no structures at the location.");
-            cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
+            cs.getSource().sendSuccess(component, !(cs.getSource().getEntity() instanceof Player));
             return;
         }
 
@@ -78,12 +79,12 @@ public class WITSCommand {
             stringBuilder.append("Structure(s) at ").append(centerPos).append(":");
         }
 
-        for (Structure structure : structures) {
-            ResourceLocation key = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey(structure);
+        for (ConfiguredStructureFeature<?, ?> structure : structures) {
+            ResourceLocation key = level.registryAccess().registryOrThrow(Registry.CONFIGURED_STRUCTURE_FEATURE_REGISTRY).getKey(structure);
             stringBuilder.append("§r\n - §6").append(key);
         }
 
-        Component component = Component.literal(stringBuilder.toString());
-        cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
+        Component component = new TextComponent(stringBuilder.toString());
+        cs.getSource().sendSuccess(component, !(cs.getSource().getEntity() instanceof Player));
     }
 }
