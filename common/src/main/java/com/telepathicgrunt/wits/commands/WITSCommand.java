@@ -5,6 +5,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
@@ -22,6 +23,7 @@ import java.util.List;
 public class WITSCommand {
     public static void createCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         String commandString = "wits";
+        String dimensionArg = "dimension";
         String locationArg = "location";
 
         LiteralCommandNode<CommandSourceStack> source = dispatcher.register(Commands.literal(commandString)
@@ -36,22 +38,22 @@ public class WITSCommand {
                     coordinates = WorldCoordinates.absolute(0, 0, 0);
                 }
 
-                listStructuresAtSpot(coordinates, true, cs);
+                listStructuresAtSpot(cs.getSource().getLevel(), coordinates, true, cs);
                 return 1;
             })
             .requires((permission) -> permission.hasPermission(2))
+            .then(Commands.argument(dimensionArg, DimensionArgument.dimension())
             .then(Commands.argument(locationArg, Vec3Argument.vec3())
             .executes(cs -> {
-                listStructuresAtSpot(Vec3Argument.getCoordinates(cs, locationArg), false, cs);
+                listStructuresAtSpot(DimensionArgument.getDimension(cs, dimensionArg), Vec3Argument.getCoordinates(cs, locationArg), false, cs);
                 return 1;
             })
-        ));
+        )));
 
         dispatcher.register(Commands.literal(commandString).redirect(source));
     }
 
-    private static void listStructuresAtSpot(Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
-        ServerLevel level = cs.getSource().getLevel();
+    private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
         BlockPos centerPos = coordinates.getBlockPos(cs.getSource());
 
         List<StructureStart> structureStarts = level.structureManager().startsForStructure(new ChunkPos(centerPos), s -> true);
