@@ -55,12 +55,12 @@ subprojects {
         if (env.MODRINTH) {
             modrinth {
                 token = env.MODRINTH
-                versionName = "WITS (1.17.1 - MC ${name.capitalize()})"
+                versionName = "WITS (1.16.5 - MC ${name.capitalize()})"
                 versionNumber = "${project.version}"
                 changelog = changeLogText
                 projectId = uploadSettings["modrinth-id"]
                 gameVersions = [
-                        "1.17.1"
+                        "1.16.5"
                 ]
                 
                 loaders = [name]
@@ -91,11 +91,11 @@ subprojects {
                     changelog = changeLogText
                     releaseType = "release"
 
-                    addGameVersion("1.17.1")
+                    addGameVersion("1.16.5")
                     addGameVersion(name.capitalize())
 
                     mainArtifact(tasks.remapJar) {
-                        displayName = "WITS v${rootProject.mod_version} (1.17.1 - MC ${name.capitalize()})"
+                        displayName = "WITS v${rootProject.mod_version} (1.16.5 - MC ${name.capitalize()})"
                     }
 
                     if (uploadDependencies.size() > 0) {

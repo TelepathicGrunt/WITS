@@ -8,10 +8,10 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.commands.arguments.coordinates.WorldCoordinate;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
-import net.minecraft.core.SectionPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.TextComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -22,7 +22,8 @@ import net.minecraft.world.level.levelgen.structure.StructureStart;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class WITSCommand {
     public static void createCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
@@ -36,10 +37,16 @@ public class WITSCommand {
                 WorldCoordinates coordinates;
                 if (cs.getSource().getEntity() instanceof Player) {
                     BlockPos currentPosition = cs.getSource().getEntity().blockPosition();
-                    coordinates = WorldCoordinates.absolute(currentPosition.getX(), currentPosition.getY(), currentPosition.getZ());
+                    coordinates = new WorldCoordinates(
+                            new WorldCoordinate(false, currentPosition.getX()),
+                            new WorldCoordinate(false, currentPosition.getY()),
+                            new WorldCoordinate(false, currentPosition.getZ()));
                 }
                 else {
-                    coordinates = WorldCoordinates.absolute(0, 0, 0);
+                    coordinates = new WorldCoordinates(
+                            new WorldCoordinate(false, 0),
+                            new WorldCoordinate(false, 0),
+                            new WorldCoordinate(false, 0));
                 }
 
                 listStructuresAtSpot(cs.getSource().getLevel(), coordinates, true, cs);
@@ -59,22 +66,16 @@ public class WITSCommand {
 
     private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
         BlockPos centerPos = coordinates.getBlockPos(cs.getSource());
-        Registry<StructureFeature<?>> structureFeatureRegistry = level.registryAccess().registryOrThrow(Registry.STRUCTURE_FEATURE_REGISTRY);
-
         List<StructureStart<?>> structureStarts = new ArrayList<>();
 
-        for (StructureFeature<?> structureFeature : structureFeatureRegistry) {
-            Stream<? extends StructureStart<?>> startsForFeature = level.structureFeatureManager().startsForFeature(SectionPos.of(centerPos), structureFeature);
-            startsForFeature.forEach(ss -> {
-                if (ss.isValid()) {
-                    structureStarts.add(ss);
-                }
-            });
+        for (StructureFeature<?> structureFeature : Registry.STRUCTURE_FEATURE) {
+            StructureStart<?> startsForFeature = level.structureFeatureManager().getStructureAt(centerPos, true, structureFeature);
+            structureStarts.add(startsForFeature);
         }
 
-        List<? extends StructureFeature<?>> structures = structureStarts.stream()
+        Set<? extends StructureFeature<?>> structures = structureStarts.stream()
                 .filter(ss -> ss.getBoundingBox().isInside(centerPos))
-                .map(StructureStart::getFeature).toList();
+                .map(StructureStart::getFeature).collect(Collectors.toSet());
 
         if (structures.isEmpty()) {
             Component component = new TextComponent(callerPosition ?
@@ -93,7 +94,7 @@ public class WITSCommand {
         }
 
         for (StructureFeature<?> structure : structures) {
-            ResourceLocation key = structureFeatureRegistry.getKey(structure);
+            ResourceLocation key = Registry.STRUCTURE_FEATURE.getKey(structure);
             stringBuilder.append("§r\n - §6").append(key);
         }
 
