@@ -11,6 +11,7 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -65,7 +66,7 @@ public class WITSCommand {
             Component component = Component.literal(callerPosition ?
                     "There's no structures at your location." :
                     "There's no structures at the location.");
-            cs.getSource().sendSuccess(component, !cs.getSource().isPlayer());
+            cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
             return;
         }
 
@@ -78,11 +79,11 @@ public class WITSCommand {
         }
 
         for (Structure structure : structures) {
-            ResourceLocation key = level.registryAccess().ownedRegistryOrThrow(Registry.STRUCTURE_REGISTRY).getKey(structure);
+            ResourceLocation key = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey(structure);
             stringBuilder.append("§r\n - §6").append(key);
         }
 
         Component component = Component.literal(stringBuilder.toString());
-        cs.getSource().sendSuccess(component, !cs.getSource().isPlayer());
+        cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
     }
 }
