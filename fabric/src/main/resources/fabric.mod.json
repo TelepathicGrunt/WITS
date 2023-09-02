@@ -4,7 +4,7 @@
   "version": "${version}",
 
   "name": "WITS",
-  "description": "Use `\\wits @s` command to get registry name of all structures where you are standing. ",
+  "description": "Use `\\\\wits` command to get registry name of all structures where you are standing. ",
   "authors": [
     "TelepathicGrunt"
   ],

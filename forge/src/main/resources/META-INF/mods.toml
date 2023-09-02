@@ -12,7 +12,7 @@ displayName="WITS" #mandatory
 displayURL="https://www.curseforge.com/minecraft/mc-mods/wits"
 authors="TelepathicGrunt"
 description='''
-Use `\wits @s` command to get registry name of all structures where you are standing.
+Use `\\wits` command to get registry name of all structures where you are standing.
 '''
 
 [[dependencies.wits]]
