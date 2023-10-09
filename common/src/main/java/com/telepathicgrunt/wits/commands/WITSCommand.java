@@ -24,6 +24,7 @@ import java.util.List;
 public class WITSCommand {
     public static void createCommand(CommandDispatcher<CommandSourceStack> dispatcher) {
         String commandString = "wits";
+        String opCommandString = "witsop";
         String dimensionArg = "dimension";
         String locationArg = "location";
 
@@ -42,6 +43,11 @@ public class WITSCommand {
                 listStructuresAtSpot(cs.getSource().getLevel(), coordinates, true, cs);
                 return 1;
             })
+        );
+
+        dispatcher.register(Commands.literal(commandString).redirect(source));
+
+        LiteralCommandNode<CommandSourceStack> source2 = dispatcher.register(Commands.literal(opCommandString)
             .requires((permission) -> permission.hasPermission(2))
             .then(Commands.argument(dimensionArg, DimensionArgument.dimension())
             .then(Commands.argument(locationArg, Vec3Argument.vec3())
@@ -51,7 +57,7 @@ public class WITSCommand {
             })
         )));
 
-        dispatcher.register(Commands.literal(commandString).redirect(source));
+        dispatcher.register(Commands.literal(opCommandString).redirect(source2));
     }
 
     private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
