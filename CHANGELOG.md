@@ -1,10 +1,4 @@
-### **(V.1.1.0 Changes) (1.16.5 Minecraft)**
+### **(V.1.1.1 Changes) (1.16.5 Minecraft)**
 
-#### Major:
-Split the operator command to `\witsop` because it was preventing no-op users from using `\wits` command.
-
-
-### **(V.1.0.0 Changes) (1.16.5 Minecraft)**
-
-#### Major:
-Initial release
+#### Misc:
+Fixed requirement of Java 16+. Should run with Java 8 now.
