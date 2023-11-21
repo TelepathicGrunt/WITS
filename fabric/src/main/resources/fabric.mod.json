@@ -22,9 +22,7 @@
       "com.telepathicgrunt.wits.fabric.WITSFabric"
     ]
   },
-  "mixins": [
-    "wits-common.mixins.json"
-  ],
+  "mixins": [],
 
   "depends": {
     "fabricloader": "*",

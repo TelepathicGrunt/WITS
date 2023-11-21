@@ -18,9 +18,4 @@ Use `\\wits` command to get registry name of all structures where you are standi
 [[dependencies.wits]]
     modId="minecraft"
     mandatory=true
-    versionRange="[1.19,)"
-
-[[dependencies.wits]]
-    modId="forge"
-    mandatory=true
-    versionRange="(37.0.0,)"
+    versionRange="[1.20.2,)"
