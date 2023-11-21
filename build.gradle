@@ -30,7 +30,7 @@ subprojects {
                     "curse-id": "909375",
                     "modrinth-id": "AVo2esap"
             ],
-            "forge": [
+            "neoforge": [
                     "curse-id": "909375",
                     "modrinth-id": "AVo2esap"
             ]
@@ -40,7 +40,7 @@ subprojects {
             "fabric": [
                 "fabric-api": true
             ],
-            "forge": []
+            "neoforge": []
     ]
 
     var env = System.getenv()
@@ -55,12 +55,12 @@ subprojects {
         if (env.MODRINTH) {
             modrinth {
                 token = env.MODRINTH
-                versionName = "WITS (1.20.1 - MC ${name.capitalize()})"
+                versionName = "WITS (${rootProject.minecraft_version} - MC ${name.capitalize()})"
                 versionNumber = "${project.version}"
                 changelog = changeLogText
                 projectId = uploadSettings["modrinth-id"]
                 gameVersions = [
-                        "1.20.1"
+                    "1.20.2"
                 ]
                 
                 loaders = [name]
@@ -91,11 +91,11 @@ subprojects {
                     changelog = changeLogText
                     releaseType = "release"
 
-                    addGameVersion("1.20.1")
+                    addGameVersion("1.20.2")
                     addGameVersion(name.capitalize())
 
                     mainArtifact(tasks.remapJar) {
-                        displayName = "WITS v${rootProject.mod_version} (1.20.1 - MC ${name.capitalize()})"
+                        displayName = "WITS v${rootProject.mod_version} (${rootProject.minecraft_version} - MC ${name.capitalize()})"
                     }
 
                     if (uploadDependencies.size() > 0) {
@@ -140,5 +140,5 @@ allprojects {
 }
 
 task buildAndReleaseAll{
-    dependsOn(':forge:buildAndRelease', ':fabric:buildAndRelease')
+    dependsOn(':neoforge:buildAndRelease', ':fabric:buildAndRelease')
 }
