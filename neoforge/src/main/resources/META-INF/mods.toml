@@ -1,5 +1,5 @@
 modLoader="javafml" #mandatory
-loaderVersion="[37,)" #mandatory
+loaderVersion="[1,)" #mandatory
 issueTrackerURL="https://github.com/TelepathicGrunt/WITS/issues" #optional
 license="https://github.com/TelepathicGrunt/WITS/blob/latest-released/LICENSE"
 

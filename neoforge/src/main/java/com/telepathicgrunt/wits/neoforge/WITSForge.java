@@ -1,4 +1,4 @@
-package com.telepathicgrunt.wits.forge;
+package com.telepathicgrunt.wits.neoforge;
 
 import com.telepathicgrunt.wits.WITS;
 import com.telepathicgrunt.wits.commands.WITSCommand;
