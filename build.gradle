@@ -55,7 +55,7 @@ subprojects {
             type = STABLE
             changelog = changelogText
 
-            displayName = "WITS v${project.version} (${rootProject.minecraft_version} - MC ${name.capitalize()})"
+            displayName = "WITS v${rootProject.mod_version} (${rootProject.minecraft_version} - MC ${name.capitalize()})"
             version = "${project.version}"
             modLoaders.add(name)
 
