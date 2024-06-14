@@ -78,15 +78,13 @@ subprojects {
                 }
             }
 
-            if (env.MODRINTH) {
+            if (env.MODRINTH_TOKEN) {
                 modrinth {
                     accessToken = env.MODRINTH_TOKEN
                     projectId = uploadSettings["modrinth-id"]
                     minecraftVersions.add(rootProject.minecraft_version)
 
                     dependencies {
-                        def optionalContainer = getOptional()
-                        def requiredContainer = getRequired()
                         uploadDependencies.each { dep, required ->
                             if (required) {
                                 requires(dep)
