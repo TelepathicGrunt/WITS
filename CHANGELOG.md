@@ -1,4 +1,4 @@
-### **(V.1.2.3 Changes) (1.20.6 Minecraft)**
+### **(V.1.3.0 Changes) (1.21 Minecraft)**
 
 #### Major:
-Updated to 1.20.6
+Updated to 1.21
