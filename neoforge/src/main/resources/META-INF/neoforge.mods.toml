@@ -1,14 +1,14 @@
-modLoader="javafml" #mandatory
-loaderVersion="[1,)" #mandatory
-issueTrackerURL="https://github.com/TelepathicGrunt/WITS/issues" #optional
+modLoader="javafml"
+loaderVersion="[1,)"
+issueTrackerURL="https://github.com/TelepathicGrunt/WITS/issues"
 license="https://github.com/TelepathicGrunt/WITS/blob/latest-released/LICENSE"
 
-[[mods]] #mandatory
-modId="wits" #mandatory
+[[mods]]
+modId="wits"
 logoFile= "wits_logo_wide.png"
 logoBlur=false
-version="${version}" #mandatory
-displayName="WITS" #mandatory
+version="${version}"
+displayName="WITS"
 displayURL="https://www.curseforge.com/minecraft/mc-mods/wits"
 authors="TelepathicGrunt"
 description='''
