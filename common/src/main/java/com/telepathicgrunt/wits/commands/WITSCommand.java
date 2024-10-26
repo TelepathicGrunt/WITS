@@ -85,7 +85,7 @@ public class WITSCommand {
         }
 
         for (Structure structure : structures) {
-            ResourceLocation key = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey(structure);
+            ResourceLocation key = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getKey(structure);
             stringBuilder.append("§r\n - §6").append(key);
         }
 
