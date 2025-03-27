@@ -3,6 +3,7 @@ package com.telepathicgrunt.wits.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.tree.LiteralCommandNode;
+import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.DimensionArgument;
@@ -13,6 +14,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -76,20 +79,20 @@ public class WITSCommand {
             return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        MutableComponent component;
         if (callerPosition) {
-            stringBuilder.append("Structure(s) at your location:");
+            component = MutableComponent.create(PlainTextContents.create("Structure(s) at your location:"));
         }
         else {
-            stringBuilder.append("Structure(s) at ").append(centerPos).append(":");
+            component = MutableComponent.create(PlainTextContents.create("Structure(s) at " + centerPos.toShortString() + ":"));
         }
 
         for (Structure structure : structures) {
             ResourceLocation key = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getKey(structure);
-            stringBuilder.append("§r\n - §6").append(key);
+            component.append(Component.literal("\n -").withStyle(ChatFormatting.RESET))
+                    .append(Component.literal(key.toString()).withStyle(ChatFormatting.GOLD));
         }
 
-        Component component = Component.literal(stringBuilder.toString());
         cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
     }
 }
