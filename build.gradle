@@ -1,128 +1,183 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.7-SNAPSHOT" apply false
-    id "me.modmuss50.mod-publish-plugin" version "0.7.4"
+    id 'idea'
+    id 'maven-publish'
+    id 'me.modmuss50.mod-publish-plugin' version '0.7.4' apply false
+    id 'net.neoforged.moddev' version '2.0.43-beta' apply false
 }
 
-architectury {
-    minecraft = rootProject.minecraft_version
+def javaVersion = 21
+
+def ENV = System.getenv()
+version = mod_version
+group = mod_group_id
+
+allprojects {
+    tasks.register('buildAndRelease') {
+        dependsOn(tasks.build, tasks.publish)
+    }
 }
 
 subprojects {
-    apply plugin: "dev.architectury.loom"
-    apply plugin: "me.modmuss50.mod-publish-plugin"
+    apply plugin: 'java-library'
+    apply plugin: 'maven-publish'
+    apply plugin: 'me.modmuss50.mod-publish-plugin'
+    project.group = rootProject.group
+    project.version = rootProject.version
 
-    version = "${rootProject.mod_version}+${rootProject.minecraft_version}-${name}"
-
-    loom {
-        silentMojangMappingsLicense()
+    repositories {
+        maven { url = 'https://maven.teamresourceful.com/repository/maven-releases' }
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
-        mappings loom.officialMojangMappings()
+        compileOnly "org.jetbrains:annotations:${jetbrains_annotations_version}"
     }
 
-    Map<String, Map<String, String>> platformSettings = [
-            "fabric": [
-                    "curse-id": "909375",
-                    "modrinth-id": "AVo2esap"
-            ],
-            "neoforge": [
-                    "curse-id": "909375",
-                    "modrinth-id": "AVo2esap"
-            ]
-    ]
+    base {
+        archivesName.set("${mod_id}-${project.name}")
+    }
 
-    Map<String, Map<String, Boolean>> platformDependencies = [
-            "fabric": [
-                "fabric-api": true
-            ],
-            "neoforge": []
-    ]
+    processResources {
+        filteringCharset "UTF-8"
 
-    var env = System.getenv()
-    def uploadSettings = platformSettings.get(name)
-    def uploadDependencies = platformDependencies.get(name)
+        def expandProps = [
+                "version"              : project.version,
+                "maven_group_id"       : project.mod_group_id,
+                "mod_id"               : project.mod_id,
+                "mod_display_name"     : project.mod_name,
+                "mod_description"      : project.mod_description,
+                "sources_url"          : project.sources_url,
+                "issues_url"           : project.issues_url,
+                "license_url"          : project.license_url,
+                "homepage_url"         : project.homepage_url,
 
-    if (uploadSettings != null && uploadDependencies != null) {
+                "minecraft_version"    : project.minecraft_version,
+                "neoforge_version"     : project.neoforge_version,
+                "fabric_loader_version": project.fabric_loader_version,
+                "java_version"         : "${javaVersion}",
+        ]
 
-        File changeLog = rootProject.file("CHANGELOG.md")
-        String changelogText = changeLog.exists() ? changeLog.text : ""
+        filesMatching(['pack.mcmeta', '*.mod.json', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
+            expand expandProps
+        }
+        inputs.properties(expandProps)
+    }
 
-        publishMods {
-            file = tasks.remapJar.archiveFile
-            type = STABLE
-            changelog = changelogText
+    java {
+        if (JavaVersion.current() < JavaVersion.toVersion(javaVersion)) {
+            toolchain {
+                languageVersion = JavaLanguageVersion.of(javaVersion)
+            }
+        } else {
+            sourceCompatibility = JavaVersion.toVersion(javaVersion)
+            targetCompatibility = JavaVersion.toVersion(javaVersion)
+        }
 
-            displayName = "WITS v${rootProject.mod_version} (${rootProject.minecraft_version} - MC ${name.capitalize()})"
-            version = "${project.version}"
-            modLoaders.add(name)
+        withSourcesJar()
+//        withJavadocJar()
+    }
 
-            if (env.CURSEFORGEKEY) {
-                curseforge {
-                    accessToken = env.CURSEFORGEKEY
-                    projectId = uploadSettings["curse-id"]
-                    minecraftVersions.add(rootProject.minecraft_version)
+    javadoc {
+        // make javadoc not throw on mixin's '@reason'
+        options.tags = ["reason"]
+    }
 
-                    if (uploadDependencies.size() > 0) {
-                        uploadDependencies.each { dep, required ->
-                            if (required) {
-                                requires(dep)
-                            }
-                            else {
-                                optional(dep)
-                            }
+    jar {
+        def licenseFile = rootProject.file("LICENSE.txt")
+        inputs.file(licenseFile)
+
+        from(licenseFile) {
+            rename { "LICENSE_${mod_name}.txt" }
+        }
+    }
+
+    sourcesJar {
+        def licenseFile = rootProject.file("LICENSE.txt")
+        inputs.file(licenseFile)
+
+        from(licenseFile) {
+            rename { "LICENSE_${mod_name}.txt" }
+        }
+    }
+
+    tasks.withType(JavaCompile).configureEach {
+        options.release.set(javaVersion)
+    }
+
+    tasks.publishMods.mustRunAfter tasks.publish
+    tasks.buildAndRelease.dependsOn(tasks.publishMods)
+
+    publishing {
+        publications {
+            "mavenJava${project.name}"(MavenPublication) {
+                artifactId "${project.mod_id}-${project.name}"
+                from components.java
+
+                pom {
+                    name = project.mod_name
+                    description = project.mod_description
+                    url = project.sources_url
+
+                    scm {
+                        connection = "git:${project.sources_url}.git"
+                        developerConnection = "git:${project.sources_url}.git"
+                        url = project.sources_url
+                    }
+
+                    licenses {
+                        license {
+                            name = 'MIT License'
+                            url = project.license_url
+                        }
+                    }
+
+                    developers {
+                        developer {
+                            id = 'telepathic_grunt'
+                            name = 'TelepathicGrunt'
+                            email = 'asarnesespam@gmail.com'
                         }
                     }
                 }
+
             }
+        }
+    }
 
-            if (env.MODRINTH_TOKEN) {
-                modrinth {
-                    accessToken = env.MODRINTH_TOKEN
-                    projectId = uploadSettings["modrinth-id"]
-                    minecraftVersions.add(rootProject.minecraft_version)
+    publishMods {
+        type = STABLE
 
-                    dependencies {
-                        uploadDependencies.each { dep, required ->
-                            if (required) {
-                                requires(dep)
-                            } else {
-                                optional(dep)
-                            }
-                        }
-                    }
+        displayName = "${project.mod_name} v${project.mod_version} (${project.minecraft_version} ${project.name.capitalize()})"
+        version = "${project.version}+${project.minecraft_version}-${project.name}"
+
+        def changeLogFile = project.file("CHANGELOG.md")
+        changelog = changeLogFile.exists() ? changeLogFile.text : ""
+    }
+}
+
+tasks.named('wrapper', Wrapper).configure {
+    distributionType = Wrapper.DistributionType.BIN
+}
+
+// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
+idea {
+    module {
+        downloadSources = true
+        downloadJavadoc = true
+    }
+}
+
+////////////////////////////////////////////RELEASING/////////////////////////////////////////////
+
+publishing {
+    repositories {
+        if (ENV.MAVEN_USER) {
+            maven {
+                url = uri("https://nexus.resourcefulbees.com/repository/telepathicgrunt/")
+                credentials {
+                    username ENV.MAVEN_USER
+                    password ENV.MAVEN_PASS
                 }
             }
         }
     }
-}
-
-allprojects {
-    apply plugin: "java"
-    apply plugin: "architectury-plugin"
-    apply plugin: "maven-publish"
-
-    archivesBaseName = rootProject.modid
-    version = "${rootProject.mod_version}+${rootProject.minecraft_version}-${name}"
-    group = rootProject.maven_group
-
-    repositories {
-        maven { url "https://maven.architectury.dev/" }
-        maven { url "https://maven.neoforged.net/releases/" }
-    }
-
-    tasks.withType(JavaCompile) {
-        options.encoding = "UTF-8"
-        options.release = 21
-    }
-
-    java {
-        withSourcesJar()
-    }
-}
-
-task buildAndReleaseAll{
-    dependsOn(':neoforge:buildAndRelease', ':fabric:buildAndRelease')
 }

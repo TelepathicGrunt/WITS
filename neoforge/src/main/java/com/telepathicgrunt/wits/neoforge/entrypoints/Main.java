@@ -1,4 +1,4 @@
-package com.telepathicgrunt.wits.neoforge;
+package com.telepathicgrunt.wits.neoforge.entrypoints;
 
 import com.telepathicgrunt.wits.WITS;
 import com.telepathicgrunt.wits.commands.WITSCommand;
@@ -9,9 +9,10 @@ import net.neoforged.neoforge.event.RegisterCommandsEvent;
 
 
 @Mod(WITS.MODID)
-public class WITSForge {
+public class Main {
 
-    public WITSForge() {
+    public Main() {
+        WITS.init();
         IEventBus forgeBus = NeoForge.EVENT_BUS;
         forgeBus.addListener(this::registerCommand);
     }

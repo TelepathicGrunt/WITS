@@ -20,7 +20,7 @@ build
 # other
 eclipse
 run
-.gitattributes
-deps
-common/src/generated
-CHANGELOG_OLD.md
+runs
+run-data
+
+repo
