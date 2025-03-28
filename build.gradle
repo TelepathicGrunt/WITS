@@ -161,7 +161,7 @@ subprojects {
         type = STABLE
 
         displayName = "${project.mod_name} v${project.mod_version} (${project.minecraft_version} ${project.name.capitalize()})"
-        version = "${project.version}+${project.minecraft_version}-${project.name}"
+        version = project.version
 
         def changeLogFile = project.file("CHANGELOG.md")
         changelog = changeLogFile.exists() ? changeLogFile.text : ""
