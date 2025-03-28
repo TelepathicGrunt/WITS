@@ -1,8 +1,8 @@
 plugins {
     id 'idea'
     id 'maven-publish'
-    id 'me.modmuss50.mod-publish-plugin' version '0.7.4' apply false
-    id 'net.neoforged.moddev' version '2.0.43-beta' apply false
+    id 'me.modmuss50.mod-publish-plugin' version '0.8.4' apply false
+    id 'net.neoforged.moddev' version '2.0.80' apply false
 }
 
 def javaVersion = 21
@@ -106,7 +106,7 @@ subprojects {
     }
 
     tasks.publishMods.mustRunAfter tasks.publish
-    tasks.buildAndRelease.dependsOn(tasks.publishMods)
+    tasks.buildAndRelease.dependsOn(tasks.publish).dependsOn(tasks.publishMods)
 
     publishing {
         repositories {
