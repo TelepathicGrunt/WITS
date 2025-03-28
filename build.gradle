@@ -24,16 +24,18 @@ subprojects {
     project.group = rootProject.group
     project.version = rootProject.version
 
+    base {
+        archivesName.set(mod_id)
+    }
+
+    version = "${rootProject.mod_version}+${rootProject.minecraft_version}-${name}"
+
     repositories {
         maven { url = 'https://maven.teamresourceful.com/repository/maven-releases' }
     }
 
     dependencies {
         compileOnly "org.jetbrains:annotations:${jetbrains_annotations_version}"
-    }
-
-    base {
-        archivesName.set("${mod_id}-${project.name}")
     }
 
     processResources {
@@ -107,10 +109,22 @@ subprojects {
     tasks.buildAndRelease.dependsOn(tasks.publishMods)
 
     publishing {
+        repositories {
+            if (ENV.MAVEN_USER) {
+                maven {
+                    url = uri("https://nexus.resourcefulbees.com/repository/telepathicgrunt/")
+                    credentials {
+                        username ENV.MAVEN_USER
+                        password ENV.MAVEN_PASS
+                    }
+                }
+            }
+        }
+
         publications {
             "mavenJava${project.name}"(MavenPublication) {
-                artifactId "${project.mod_id}-${project.name}"
                 from components.java
+                artifactId "${project.mod_id}".toUpperCase()
 
                 pom {
                     name = project.mod_name
@@ -163,21 +177,5 @@ idea {
     module {
         downloadSources = true
         downloadJavadoc = true
-    }
-}
-
-////////////////////////////////////////////RELEASING/////////////////////////////////////////////
-
-publishing {
-    repositories {
-        if (ENV.MAVEN_USER) {
-            maven {
-                url = uri("https://nexus.resourcefulbees.com/repository/telepathicgrunt/")
-                credentials {
-                    username ENV.MAVEN_USER
-                    password ENV.MAVEN_PASS
-                }
-            }
-        }
     }
 }
