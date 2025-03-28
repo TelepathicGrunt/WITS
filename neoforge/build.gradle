@@ -20,10 +20,8 @@ publishMods {
     String changeLogText = changeLog.exists() ? changeLog.text : ""
 
     def uploadDependenciesCf = [
-            'fabric-api': true
     ]
     def uploadDependenciesMr = [
-            'fabric-api': true
     ]
 
     if (project.hasProperty('curseforge_id')) {
