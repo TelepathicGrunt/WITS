@@ -11,13 +11,13 @@ import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.commands.arguments.coordinates.WorldCoordinates;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -32,7 +32,7 @@ public class WITSCommand {
         String locationArg = "location";
 
         LiteralCommandNode<CommandSourceStack> source = dispatcher.register(Commands.literal(commandString)
-            .requires((permission) -> permission.hasPermission(0))
+                .requires(Commands.hasPermission(Commands.LEVEL_ALL))
             .executes(cs -> {
                 WorldCoordinates coordinates;
                 if (cs.getSource().isPlayer()) {
@@ -51,7 +51,7 @@ public class WITSCommand {
         dispatcher.register(Commands.literal(commandString).redirect(source));
 
         LiteralCommandNode<CommandSourceStack> source2 = dispatcher.register(Commands.literal(opCommandString)
-            .requires((permission) -> permission.hasPermission(2))
+            .requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
             .then(Commands.argument(dimensionArg, DimensionArgument.dimension())
             .then(Commands.argument(locationArg, Vec3Argument.vec3())
             .executes(cs -> {
@@ -88,7 +88,7 @@ public class WITSCommand {
         }
 
         for (Structure structure : structures) {
-            ResourceLocation key = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getKey(structure);
+            Identifier key = level.registryAccess().lookupOrThrow(Registries.STRUCTURE).getKey(structure);
             component.append(Component.literal("\n -").withStyle(ChatFormatting.RESET))
                     .append(Component.literal(key.toString()).withStyle(ChatFormatting.GOLD));
         }
