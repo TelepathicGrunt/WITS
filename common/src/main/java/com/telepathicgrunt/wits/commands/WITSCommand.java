@@ -66,7 +66,7 @@ public class WITSCommand {
     private static void listStructuresAtSpot(ServerLevel level, Coordinates coordinates, boolean callerPosition, CommandContext<CommandSourceStack> cs) {
         BlockPos centerPos = coordinates.getBlockPos(cs.getSource());
 
-        List<StructureStart> structureStarts = level.structureManager().startsForStructure(new ChunkPos(centerPos), s -> true);
+        List<StructureStart> structureStarts = level.structureManager().startsForStructure(ChunkPos.containing(centerPos), s -> true);
         List<Structure> structures = structureStarts.stream()
                 .filter(ss -> ss.getBoundingBox().isInside(centerPos))
                 .map(StructureStart::getStructure).toList();
