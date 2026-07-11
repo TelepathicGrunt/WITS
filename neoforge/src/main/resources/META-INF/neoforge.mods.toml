@@ -1,21 +1,21 @@
-modLoader="javafml"
-loaderVersion="[1,)"
-issueTrackerURL="https://github.com/TelepathicGrunt/WITS/issues"
-license="https://github.com/TelepathicGrunt/WITS/blob/latest-released/LICENSE"
+modLoader="javafml" #mandatory
+loaderVersion="[4,)"
+license="MIT"
+issueTrackerURL="${issues_url}"
+sourcesUrl="${sources_url}"
 
 [[mods]]
-modId="wits"
-logoFile= "wits_logo_wide.png"
-logoBlur=false
+modId="${mod_id}"
 version="${version}"
-displayName="WITS"
-displayURL="https://www.curseforge.com/minecraft/mc-mods/wits"
+displayName="${mod_display_name}"
+displayURL="${homepage_url}"
+logoFile="wits_logo_wide.png"
+logoBlur=false
 authors="TelepathicGrunt"
-description='''
-Use `\\wits` command to get registry name of all structures where you are standing.
-'''
+description='''${mod_description}'''
 
-[[dependencies.wits]]
-    modId="minecraft"
-    type="required"
-    versionRange="[1.21,)"
+[dependencies]
+"${mod_id}" = [
+    { modId = "neoforge", type = "required", versionRange = "*", ordering = "NONE" },
+    { modId = "minecraft", type = "required", versionRange = "[1.21,)", ordering = "NONE" },
+]
