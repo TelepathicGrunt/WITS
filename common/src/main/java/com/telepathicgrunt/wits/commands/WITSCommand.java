@@ -16,6 +16,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.contents.PlainTextContents;
 import net.minecraft.resources.Identifier;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.permissions.PermissionSet;
 import net.minecraft.world.level.ChunkPos;
@@ -94,5 +97,22 @@ public class WITSCommand {
         }
 
         cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
+
+        
+        MutableComponent currentComponent = Component.empty();
+        if (callerPosition) {
+            currentComponent.append("Structure(s) at your location:");
+        }
+        else {
+            currentComponent.append("Structure(s) at ").append(Component.translatable("chat.coordinates", centerPos.getX(), centerPos.getY(), centerPos.getZ())).append(":");
+        }
+
+        for (Structure structure : structures) {
+            ResourceLocation key = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey(structure);
+            currentComponent.append("§r\n - §6");
+            currentComponent.append(ComponentUtils.copyOnClickText(String.valueOf(key)));
+        }
+
+        cs.getSource().sendSuccess(() -> currentComponent, !cs.getSource().isPlayer());
     }
 }

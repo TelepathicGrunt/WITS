@@ -1,4 +1,4 @@
-### **(V.1.4.2 Changes) (26.1 Minecraft)**
+### **(V.1.4.3 Changes) (26.1 Minecraft)**
 
-##### Misc:
-Fixed rare potential race condition issue with ServiceLoaders loading.
+#### Major:
+The command's output structure registry names can now be clicked to copy to clipboard
