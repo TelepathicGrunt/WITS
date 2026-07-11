@@ -13,6 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
@@ -76,20 +78,20 @@ public class WITSCommand {
             return;
         }
 
-        StringBuilder stringBuilder = new StringBuilder();
+        MutableComponent currentComponent = Component.empty();
         if (callerPosition) {
-            stringBuilder.append("Structure(s) at your location:");
+            currentComponent.append("Structure(s) at your location:");
         }
         else {
-            stringBuilder.append("Structure(s) at ").append(centerPos).append(":");
+            currentComponent.append("Structure(s) at ").append(Component.translatable("chat.coordinates", centerPos.getX(), centerPos.getY(), centerPos.getZ())).append(":");
         }
 
         for (Structure structure : structures) {
             ResourceLocation key = level.registryAccess().registryOrThrow(Registries.STRUCTURE).getKey(structure);
-            stringBuilder.append("§r\n - §6").append(key);
+            currentComponent.append("§r\n - §6");
+            currentComponent.append(ComponentUtils.copyOnClickText(String.valueOf(key)));
         }
 
-        Component component = Component.literal(stringBuilder.toString());
-        cs.getSource().sendSuccess(() -> component, !cs.getSource().isPlayer());
+        cs.getSource().sendSuccess(() -> currentComponent, !cs.getSource().isPlayer());
     }
 }

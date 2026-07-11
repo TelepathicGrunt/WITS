@@ -1,10 +1,4 @@
-### **(V.1.1.0 Changes) (1.20.1 Minecraft)**
+### **(V.1.1.1 Changes) (1.20.1 Minecraft)**
 
 #### Major:
-Split the operator command to `\witsop` because it was preventing no-op users from using `\wits` command.
-
-
-### **(V.1.0.0 Changes) (1.20.1 Minecraft)**
-
-#### Major:
-Initial release
+The command's output structure registry names can now be clicked to copy to clipboard
