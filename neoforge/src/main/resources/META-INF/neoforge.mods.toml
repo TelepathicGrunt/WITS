@@ -17,5 +17,5 @@ description='''${mod_description}'''
 [dependencies]
 "${mod_id}" = [
     { modId = "neoforge", type = "required", versionRange = "*", ordering = "NONE" },
-    { modId = "minecraft", type = "required", versionRange = "[26.1,)", ordering = "NONE" },
+    { modId = "minecraft", type = "required", versionRange = "${minecraft_version},)", ordering = "NONE" },
 ]
