@@ -24,7 +24,7 @@ subprojects {
     apply plugin: 'maven-publish'
     apply plugin: 'me.modmuss50.mod-publish-plugin'
     project.group = rootProject.group
-    project.version = rootProject.version
+    project.version = "${rootProject.version}+${rootProject.minecraft_version}-${name}"
 
     base {
         archivesName.set(mod_id)
@@ -58,7 +58,7 @@ subprojects {
                 "java_version"         : "${javaVersion}",
         ]
 
-        filesMatching(['pack.mcmeta', '*.mod.json', 'META-INF/neoforge.mods.toml', '*.mixins.json']) {
+        filesMatching(['pack.mcmeta', 'fabric.mod.json', 'META-INF/neoforge.mods.toml']) {
             expand expandProps
         }
         inputs.properties(expandProps)
