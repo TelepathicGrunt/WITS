@@ -12,22 +12,18 @@
     "sources": "${sources_url}",
     "issues": "${issues_url}"
   },
-
-  "license": "MIT License",
-  "icon": "assets/wits/wits_logo.png",
-
-  "environment": "*",
+  "license": "MIT",
+  "icon": "wits_logo_wide.png",
   "entrypoints": {
     "main": [
       "com.telepathicgrunt.wits.fabric.entrypoints.Main"
     ]
   },
-  "mixins": [],
-
   "depends": {
     "fabricloader": ">=${fabric_loader_version}",
-    "minecraft": ">=${minecraft_version}",
+    "minecraft": "26.x",
     "java": ">=${java_version}",
     "fabric-api": "*"
-  }
+  },
+  "environment": "*"
 }

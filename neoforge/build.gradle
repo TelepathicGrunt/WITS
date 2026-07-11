@@ -19,10 +19,8 @@ publishMods {
     File changeLog = rootProject.file("CHANGELOG.md")
     String changeLogText = changeLog.exists() ? changeLog.text : ""
 
-    def uploadDependenciesCf = [
-    ]
-    def uploadDependenciesMr = [
-    ]
+    def uploadDependenciesCf = []
+    def uploadDependenciesMr = []
 
     if (project.hasProperty('curseforge_id')) {
         curseforge('CurseforgeNeo') {
@@ -64,16 +62,6 @@ publishMods {
 neoForge {
     version = project.neoforge_version
 
-    def atFile = project(":common").file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (atFile.exists()) {
-        accessTransformers {
-            from atFile
-            publish atFile
-        }
-    }
-
-    validateAccessTransformers.set(true)
-
     mods {
         // define mod <-> source bindings
         // these are used to tell the game which sources are for which mod
@@ -87,9 +75,6 @@ neoForge {
 
     runs {
         configureEach {
-            logLevel = org.slf4j.event.Level.DEBUG
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
-
             gameDirectory = project.file('run')
 
             sourceSet = sourceSets.main

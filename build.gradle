@@ -32,9 +32,7 @@ subprojects {
 
     version = "${rootProject.mod_version}+${rootProject.minecraft_version}-${name}"
 
-    repositories {
-        maven { url = 'https://maven.teamresourceful.com/repository/maven-releases' }
-    }
+    repositories {}
 
     dependencies {
         compileOnly "org.jetbrains:annotations:${jetbrains_annotations_version}"

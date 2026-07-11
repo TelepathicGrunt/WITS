@@ -1,6 +1,5 @@
 plugins {
     id 'net.neoforged.moddev'
-    id 'net.fabricmc.fabric-loom-companion'
 }
 
 // Vanilla depends on ASM 9.3, MDG makes that a 'strict' version constraint,
@@ -24,22 +23,8 @@ dependencies {
     compileOnly "org.ow2.asm:asm-commons:${project.asm_version}"
     compileOnly "org.ow2.asm:asm-tree:${project.asm_version}"
     compileOnly "org.ow2.asm:asm-util:${project.asm_version}"
-
-    //compileOnly "net.fabricmc:sponge-mixin:${project.mixin_version}"
-    //compileOnly "io.github.llamalad7:mixinextras-common:${project.mixin_extras_version}"
-    //annotationProcessor "io.github.llamalad7:mixinextras-common:${project.mixin_extras_version}"
 }
 
 neoForge {
     neoFormVersion = project.neoform_version
-
-    def atFile = file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (atFile.exists()) {
-        accessTransformers {
-            from atFile
-            publish atFile
-        }
-    }
-
-    validateAccessTransformers.set(true)
 }
