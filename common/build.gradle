@@ -8,9 +8,7 @@ architectury {
     common("fabric", "forge")
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/wits.accesswidener")
-}
+loom {}
 
 def ENV = System.getenv()
 
