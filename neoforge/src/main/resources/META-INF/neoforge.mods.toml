@@ -9,8 +9,7 @@ modId="${mod_id}"
 version="${version}"
 displayName="${mod_display_name}"
 displayURL="${homepage_url}"
-logoFile="wits_logo_wide.png"
-logoBlur=false
+bannerFile="wits_logo_wide.png"
 authors="TelepathicGrunt"
 description='''${mod_description}'''
 

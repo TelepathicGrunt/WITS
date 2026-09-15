@@ -1,4 +1,4 @@
-### **(V.1.4.3 Changes) (26.1 Minecraft)**
+### **(V.1.4.3 Changes) (26.3 Minecraft)**
 
 #### Major:
-The command's output structure registry names can now be clicked to copy to clipboard
+Updated to v26.3

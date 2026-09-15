@@ -30,6 +30,8 @@ publishMods {
             minecraftVersions.add("26.1.1")
             minecraftVersions.add("26.1.2")
             changelog = changeLogText
+            client = false
+            server = true
 
             uploadDependenciesCf.each { dep, required ->
                 if (required) {
