@@ -35,8 +35,6 @@ publishMods {
             accessToken = providers.environmentVariable('CURSEFORGEKEY')
             projectId = project.findProperty('curseforge_id')
             minecraftVersions.add(project.minecraft_version)
-            minecraftVersions.add("26.1.1")
-            minecraftVersions.add("26.1.2")
             changelog = changeLogText
             client = false
             server = true
@@ -56,8 +54,6 @@ publishMods {
             accessToken = providers.environmentVariable('MODRINTH_TOKEN')
             projectId = project.findProperty('modrinth_id')
             minecraftVersions.add(project.minecraft_version)
-            minecraftVersions.add("26.1.1")
-            minecraftVersions.add("26.1.2")
             changelog = changeLogText
 
             dependencies {
