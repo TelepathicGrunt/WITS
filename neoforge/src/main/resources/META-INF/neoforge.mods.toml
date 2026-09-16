@@ -10,6 +10,7 @@ version="${version}"
 displayName="${mod_display_name}"
 displayURL="${homepage_url}"
 bannerFile="wits_logo_wide.png"
+iconFile="assets/wits/wits_logo.png"
 authors="TelepathicGrunt"
 description='''${mod_description}'''
 
